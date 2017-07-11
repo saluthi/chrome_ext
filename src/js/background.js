@@ -1,12 +1,17 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/operator/delay';
 
 const lookUpHandler = (request, sender, sendResponse) => {
   if(sender.tab && !!request.lookUp){
-    Observable.of('Placeholer definition!')
-      .delay(1000)
-      .subscribe((definition) => sendResponse({definition}));
+    fetch('http://www.randomtext.me/api/lorem/h1/10-20')
+      .then((response) => response.json())
+      .then((json) => {
+        const text = json.text_out;
+        const definition = text.slice(4, text.length-5);
+        sendResponse({definition});
+      });
   }
   return true;
 }
